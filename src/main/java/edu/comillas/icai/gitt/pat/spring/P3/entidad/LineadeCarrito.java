@@ -9,25 +9,21 @@ import jakarta.validation.constraints.PositiveOrZero;
 public class LineadeCarrito {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    public Long idLinea;
+
+    @Column(nullable = false)
     public Long idCarrito;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     public Long idArticulo;
 
-    @Positive
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     public int unidades;
 
-    @PositiveOrZero
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     public double precioUnitario;
 
-    @PositiveOrZero
-    @Column(nullable = false, unique = true)
-    public double precioTotal;
-
-    @PositiveOrZero
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     public double costeLinea;
 
 }

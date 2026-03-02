@@ -3,14 +3,14 @@ package edu.comillas.icai.gitt.pat.spring.P3.entidad;
 import jakarta.persistence.*;
 
 @Entity
-public class Carrito {
+public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Long idCarrito;
+    public Long id;
+
+    @Column(nullable = false, unique = true)
+    public String email;
 
     @Column(nullable = false)
-    public Long idUsuario;
-
-    @Column(nullable = false)
-    public double precioTotal;
+    public String credenciales;
 }
