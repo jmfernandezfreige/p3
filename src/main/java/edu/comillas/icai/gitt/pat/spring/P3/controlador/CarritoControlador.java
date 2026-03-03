@@ -41,7 +41,7 @@ public class CarritoControlador {
     }
 
     @PutMapping("/api/carritos/{idCarrito}")
-    public Carrito actualizaCarrito(@PathVariable Long idCarrito, @RequestBody Carrito carritoCambiado) {
+    public Carrito cambiaCarrito(@PathVariable Long idCarrito, @RequestBody Carrito carritoCambiado) {
         Carrito carritoExistente = this.repoCarrito.findById(idCarrito)
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "Carrito no encontrado"));
