@@ -8,6 +8,7 @@ import edu.comillas.icai.gitt.pat.spring.P3.repositorio.RepoUsuario;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Collection;
 
@@ -42,5 +43,16 @@ public class CarritoControlador {
         this.repoCarrito.delete(carrito);
     }
 
-    //Linea de Carrito
+    @PutMapping("/api/carritos/{idCarrito}")
+    public Carrito actualizaCarrito(@PathVariable Long idCarrito, @RequestBody Carrito carritoCambiado) {
+        Carrito carritoExistente = this.repoCarrito.findById(idCarrito)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Carrito no encontrado"));
+
+        carritoExistente.idUsuario = carritoCambiado.idUsuario;
+        carritoExistente.precioTotal = carritoCambiado.precioTotal;
+
+        this.repoCarrito.save(carritoExistente);
+        return carritoExistente;
+    }
 }
