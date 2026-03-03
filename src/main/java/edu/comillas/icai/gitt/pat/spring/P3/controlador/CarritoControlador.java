@@ -1,7 +1,6 @@
 package edu.comillas.icai.gitt.pat.spring.P3.controlador;
 
 import edu.comillas.icai.gitt.pat.spring.P3.entidad.Carrito;
-import edu.comillas.icai.gitt.pat.spring.P3.entidad.Usuario;
 import edu.comillas.icai.gitt.pat.spring.P3.repositorio.RepoCarrito;
 import edu.comillas.icai.gitt.pat.spring.P3.repositorio.RepoLineadeCarrito;
 import edu.comillas.icai.gitt.pat.spring.P3.repositorio.RepoUsuario;
@@ -9,8 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-
-import java.util.Collection;
 
 @RestController
 public class CarritoControlador {
@@ -34,7 +31,7 @@ public class CarritoControlador {
 
     @GetMapping("/api/carritos/{idCarrito}")
     public Carrito getCarrito(@PathVariable Long idCarrito) {
-        return this.repoCarrito.findById(id).orElse(null);
+        return this.repoCarrito.findById(idCarrito).orElse(null);
     }
 
     @DeleteMapping("/api/carritos/{idCarrito}")
