@@ -41,7 +41,7 @@ public class UsuarioControlador {
         this.repoUsuario.delete(usuario);
     }
 
-    @PutMapping("/api/usuarios/{idUsuario")
+    @PutMapping("/api/usuarios/{idUsuario}")
     public Usuario modificaUsuario(@PathVariable Long idUsuario,
                                    @RequestBody Usuario usuarioCambiado) {
         Usuario usuarioExistente = this.repoUsuario.findById(idUsuario)
