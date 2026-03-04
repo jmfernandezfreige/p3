@@ -12,5 +12,8 @@ public class Usuario {
     public String email;
 
     @Column(nullable = false)
-    public String credenciales;
+    public String contraseña;
+
+    @ManyToOne(optional = false)
+    public Rol rol;
 }
