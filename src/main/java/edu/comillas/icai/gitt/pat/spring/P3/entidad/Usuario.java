@@ -11,5 +11,6 @@ public class Usuario {
     @Column(nullable = false, unique = true)
     public String email;
 
+    @Column(nullable = false)
     public String credenciales;
 }

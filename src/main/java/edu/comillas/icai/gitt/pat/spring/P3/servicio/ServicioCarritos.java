@@ -19,7 +19,10 @@ public class ServicioCarritos {
     @Autowired
     RepoLineadeCarrito repoLineadeCarrito;
 
-    public Usuario autentica(String credenciales) { throw new ResponseStatusException(HttpStatus.UNAUTHORIZED); }
+    public Usuario autentica(String credenciales) {
+        this.repoUsuario.findByCredenciales(String credenciales).orElse(
+        throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);)
+    }
     public Carrito creaCarrito(Carrito carritoNuevo, Usuario usuario) { return null; }
 
     public Carrito getCarrito(Long Id, Usuario usuario) {
@@ -29,7 +32,8 @@ public class ServicioCarritos {
         if (!carrito.idUsuario.equals(usuarioActual.id)) {
             throw new ResponseStatusException(
                     HttpStatus.FORBIDDEN,
-                    "Permiso denegado para ver este carrito");
+                    "Permiso denegado para ver este carrito"
+            );
         }
 
         return carrito;
