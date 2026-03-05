@@ -5,6 +5,7 @@ import edu.comillas.icai.gitt.pat.spring.P3.repositorio.RepoCarrito;
 import edu.comillas.icai.gitt.pat.spring.P3.repositorio.RepoLineadeCarrito;
 import edu.comillas.icai.gitt.pat.spring.P3.repositorio.RepoUsuario;
 import edu.comillas.icai.gitt.pat.spring.P3.servicio.ServicioCarritos;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -29,7 +30,7 @@ public class CarritoControlador {
 
     @PostMapping("/api/carritos")
     @ResponseStatus(HttpStatus.CREATED)
-    public Carrito creaCarrito(@RequestBody Carrito carritoNuevo, Authentication authentication) {
+    public Carrito creaCarrito(@Valid @RequestBody Carrito carritoNuevo, Authentication authentication) {
         return servicioCarritos.creaCarrito(carritoNuevo, authentication);
     }
 
@@ -45,7 +46,7 @@ public class CarritoControlador {
     }
 
     @PutMapping("/api/carritos/{idCarrito}")
-    public Carrito cambiaCarrito(@PathVariable Long idCarrito, @RequestBody Carrito carritoCambiado, Authentication authentication) {
+    public Carrito cambiaCarrito(@PathVariable Long idCarrito, @Valid @RequestBody Carrito carritoCambiado, Authentication authentication) {
         return servicioCarritos.cambiaCarrito(idCarrito, carritoCambiado, authentication);
     }
 }

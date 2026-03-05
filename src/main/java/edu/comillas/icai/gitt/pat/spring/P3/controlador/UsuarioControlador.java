@@ -2,6 +2,7 @@ package edu.comillas.icai.gitt.pat.spring.P3.controlador;
 
 import edu.comillas.icai.gitt.pat.spring.P3.entidad.Usuario;
 import edu.comillas.icai.gitt.pat.spring.P3.servicio.ServicioUsuarios;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -15,7 +16,7 @@ public class UsuarioControlador {
 
     @PostMapping("/api/auth/register")
     @ResponseStatus(HttpStatus.CREATED)
-    public Usuario creaUsuario(@RequestBody Usuario usuarioNuevo) {
+    public Usuario creaUsuario(@Valid @RequestBody Usuario usuarioNuevo) {
         return servicioUsuarios.registrarUsuario(usuarioNuevo);
     }
 
@@ -37,7 +38,7 @@ public class UsuarioControlador {
     }
 
     @PutMapping("/api/usuarios/me")
-    public Usuario modificaUsuario(@RequestBody Usuario usuarioCambiado, Authentication authentication) {
+    public Usuario modificaUsuario(@Valid @RequestBody Usuario usuarioCambiado, Authentication authentication) {
         return servicioUsuarios.modificarMiCuenta(usuarioCambiado, authentication);
     }
 
