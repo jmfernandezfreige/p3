@@ -18,12 +18,15 @@ public class LineadeCarrito {
     public Long idArticulo;
 
     @Column(nullable = false)
+    @Positive(message = "No puede haber un artículo con 0 unidades")
     public int unidades;
 
     @Column(nullable = false)
+    @PositiveOrZero(message = "El precio unitario no puede ser negativo")
     public double precioUnitario;
 
     @Column(nullable = false)
+    @PositiveOrZero(message = "El coste de la línea no puede ser negativo")
     public double costeLinea;
 
 }

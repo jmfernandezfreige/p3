@@ -8,7 +8,7 @@ public class Rol {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long idRol;
 
-    @Column(nullable = false, unique = true) //Solo hay un rol con el nombre USER
+    @Column(nullable = false, unique = true)
     public String nombreRol;
 
     @Column(nullable = true)
