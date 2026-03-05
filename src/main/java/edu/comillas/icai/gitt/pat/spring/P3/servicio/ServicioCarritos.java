@@ -14,34 +14,22 @@ import org.springframework.web.server.ResponseStatusException;
 @Service
 public class ServicioCarritos {
     @Autowired
-    RepoUsuario repoUsuario;
-    @Autowired
     RepoCarrito repoCarrito;
     @Autowired
     RepoLineadeCarrito repoLineadeCarrito;
+    @Autowired
+    ServicioUsuarios servicioUsuarios;
 
-
-    private Usuario getUsuarioLogueado(Authentication authentication) {
-        if (authentication == null || !authentication.isAuthenticated()) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,"Usuario no autenticado");
-        }
-
-        Usuario usuario = repoUsuario.findByEmail(authentication.getName());
-        if (usuario == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado en BD");
-        }
-        return usuario;
-    }
 
     public Carrito creaCarrito(Carrito carritoNuevo, Authentication authentication) {
-        Usuario usuario = getUsuarioLogueado(authentication);
+        Usuario usuario = servicioUsuarios.getUsuarioLogueado(authentication);
 
         carritoNuevo.usuario.id = usuario.id;
         return repoCarrito.save(carritoNuevo);
     }
 
     public Carrito getCarrito(Long idCarrito, Authentication authentication) {
-        Usuario usuario = getUsuarioLogueado(authentication);
+        Usuario usuario = servicioUsuarios.getUsuarioLogueado(authentication);
 
         Carrito carrito = repoCarrito.findById(idCarrito)
                 .orElseThrow(() -> new ResponseStatusException(
