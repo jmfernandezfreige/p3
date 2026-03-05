@@ -33,7 +33,7 @@ public class UsuarioControlador {
     @GetMapping("/api/usuarios/{idUsuario}")
     @PreAuthorize("hasRole('ADMIN')")
     public Usuario getUsuario(@PathVariable Long idUsuario) {
-        return this.repoUsuario.findById(idUsuario).orElse(null);
+        return servicioUsuarios.getUsuario(idUsuario);
     }
 
     @PutMapping("/api/usuarios/me")

@@ -9,14 +9,8 @@ public class Rol {
     public Long idRol;
 
     @Column(nullable = false, unique = true) //Solo hay un rol con el nombre USER
-    @Enumerated(EnumType.STRING)
-    public NombreRol nombreRol;
+    public String nombreRol;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     public String descripcion;
-
-    public enum NombreRol {
-        USER,
-        ADMIN
-    }
 }

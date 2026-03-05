@@ -24,7 +24,7 @@ public class CarritoControlador {
     @GetMapping("/api/carritos")
     @PreAuthorize("hasRole('ADMIN')")
     public Iterable<Carrito> getCarritos() {
-        return this.repoCarrito.findAll();
+        return servicioCarritos.getAllCarritos();
     }
 
     @PostMapping("/api/carritos")

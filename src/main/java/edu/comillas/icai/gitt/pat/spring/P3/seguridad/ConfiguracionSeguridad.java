@@ -36,6 +36,7 @@ public class ConfiguracionSeguridad {
         http.authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/auth/register").permitAll() // Para el registro se permiten TODAS
                 .requestMatchers("/api/auth/login").permitAll() // Para el login se permiten TODAS
+                .requestMatchers("/error").permitAll()
                 .anyRequest().authenticated() // Cualquier otra ruta requiere estar autenticado (logueado)
         );
 
@@ -76,7 +77,7 @@ public class ConfiguracionSeguridad {
             return User.withDefaultPasswordEncoder()
                     .username(u.email)
                     .password(u.contraseña)
-                    .roles(u.rol.nombreRol.name())
+                    .roles(u.rol.nombreRol)
                     .build();
 
         };

@@ -1,6 +1,8 @@
 package edu.comillas.icai.gitt.pat.spring.P3.servicio;
 
+import edu.comillas.icai.gitt.pat.spring.P3.entidad.Rol;
 import edu.comillas.icai.gitt.pat.spring.P3.entidad.Usuario;
+import edu.comillas.icai.gitt.pat.spring.P3.repositorio.RepoRol;
 import edu.comillas.icai.gitt.pat.spring.P3.repositorio.RepoUsuario;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,6 +14,8 @@ import org.springframework.web.server.ResponseStatusException;
 public class ServicioUsuarios {
     @Autowired
     RepoUsuario repoUsuario;
+    @Autowired
+    RepoRol repoRol;
 
     public Usuario getUsuarioLogueado(Authentication authentication) {
         if (authentication == null || !authentication.isAuthenticated()) {
@@ -30,12 +34,30 @@ public class ServicioUsuarios {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El email ya está en uso");
         }
 
+        if (usuarioNuevo.rol == null || usuarioNuevo.rol.nombreRol == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Debe especificar el rol en la petición");
+        }
+
+        String nombreRol = usuarioNuevo.rol.nombreRol;
+
+        Rol rol = repoRol.findByNombreRol(nombreRol);
+        if (rol == null) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "El rol '" + nombreRol + "' no existe. Solo se permiten 'USER' o 'ADMIN'.");
+        }
+
+        usuarioNuevo.rol = rol;
+
         return repoUsuario.save(usuarioNuevo);
     }
 
-    // Para admins
-    public Usuario getUsuario(Long id, Authentication authentication) {
-        return repoUsuario.findById(id);
+    //Para ADMIN
+    public Usuario getUsuario(Long id) {
+        return repoUsuario.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "El usuario con ID " + id + " no existe"));
     }
 
     public Usuario getMiPerfil(Authentication authentication) {

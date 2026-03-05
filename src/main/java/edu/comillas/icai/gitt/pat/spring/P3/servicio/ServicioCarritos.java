@@ -4,7 +4,6 @@ import edu.comillas.icai.gitt.pat.spring.P3.entidad.Carrito;
 import edu.comillas.icai.gitt.pat.spring.P3.entidad.Usuario;
 import edu.comillas.icai.gitt.pat.spring.P3.repositorio.RepoCarrito;
 import edu.comillas.icai.gitt.pat.spring.P3.repositorio.RepoLineadeCarrito;
-import edu.comillas.icai.gitt.pat.spring.P3.repositorio.RepoUsuario;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
@@ -21,10 +20,13 @@ public class ServicioCarritos {
     ServicioUsuarios servicioUsuarios;
 
 
+    public Iterable<Carrito> getAllCarritos() {
+        return repoCarrito.findAll();
+    }
     public Carrito creaCarrito(Carrito carritoNuevo, Authentication authentication) {
         Usuario usuario = servicioUsuarios.getUsuarioLogueado(authentication);
 
-        carritoNuevo.usuario.id = usuario.id;
+        carritoNuevo.usuario = usuario;
         return repoCarrito.save(carritoNuevo);
     }
 
