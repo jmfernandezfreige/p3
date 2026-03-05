@@ -8,7 +8,7 @@ public class Carrito {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long idCarrito;
 
-    @OneToMany
+    @ManyToOne
     public Usuario usuario;
 
     @Column(nullable = false)
