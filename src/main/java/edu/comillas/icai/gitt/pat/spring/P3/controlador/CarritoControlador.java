@@ -8,6 +8,7 @@ import edu.comillas.icai.gitt.pat.spring.P3.servicio.ServicioCarritos;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -30,31 +31,23 @@ public class CarritoControlador {
 
     @PostMapping("/api/carritos")
     @ResponseStatus(HttpStatus.CREATED)
-    public Carrito creaCarrito(@RequestBody Carrito carritoNuevo, Principal principal) {
-        return servicioCarritos.creaCarrito(carritoNuevo.idCarrito, principal.getName());
+    public Carrito creaCarrito(@RequestBody Carrito carritoNuevo, Authentication authentication) {
+        return servicioCarritos.creaCarrito(carritoNuevo, authentication);
     }
 
     @GetMapping("/api/carritos/{idCarrito}")
-    public Carrito getCarrito(@PathVariable Long idCarrito, Principal principal) {
-        return servicioCarritos.getCarrito(idCarrito, principal.getName());
+    public Carrito getCarrito(@PathVariable Long idCarrito, Authentication authentication) {
+        return servicioCarritos.getCarrito(idCarrito, authentication);
     }
 
     @DeleteMapping("/api/carritos/{idCarrito}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void borraCarrito(@PathVariable Long idCarrito, Principal principal) {
-        servicioCarritos.borraCarrito(idCarrito, principal.getName());
+    public void borraCarrito(@PathVariable Long idCarrito, Authentication authentication) {
+        servicioCarritos.borraCarrito(idCarrito, authentication);
     }
 
     @PutMapping("/api/carritos/{idCarrito}")
-    public Carrito cambiaCarrito(@PathVariable Long idCarrito, @RequestBody Carrito carritoCambiado) {
-        Carrito carritoExistente = this.repoCarrito.findById(idCarrito)
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "Carrito no encontrado"));
-
-        carritoExistente.idUsuario = carritoCambiado.idUsuario;
-        carritoExistente.precioTotal = carritoCambiado.precioTotal;
-
-        this.repoCarrito.save(carritoExistente);
-        return carritoExistente;
+    public Carrito cambiaCarrito(@PathVariable Long idCarrito, @RequestBody Carrito carritoCambiado, Authentication authentication) {
+        return servicioCarritos.cambiaCarrito(idCarrito, carritoCambiado, authentication);
     }
 }
