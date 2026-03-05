@@ -65,7 +65,7 @@ public class CarritoControlador {
         return servicioCarritos.getLineas(idCarrito, authentication);
     }
 
-    @DeleteMapping("/{idCarrito}/lineas/{idLinea}")
+    @DeleteMapping("api/carritos/{idCarrito}/lineas/{idLinea}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void borraLinea(@PathVariable Long idCarrito,
                            @PathVariable Long idLinea,
