@@ -8,8 +8,8 @@ public class Carrito {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long idCarrito;
 
-    @Column(nullable = false)
-    public Long idUsuario;
+    @OneToMany
+    public Usuario usuario;
 
     @Column(nullable = false)
     public double precioTotal;

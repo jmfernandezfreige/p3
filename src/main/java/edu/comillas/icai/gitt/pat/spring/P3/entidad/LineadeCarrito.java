@@ -11,8 +11,8 @@ public class LineadeCarrito {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long idLinea;
 
-    @Column(nullable = false)
-    public Long idCarrito;
+    @ManyToOne(optional = false)
+    public Carrito carrito;
 
     @Column(nullable = false)
     public Long idArticulo;
