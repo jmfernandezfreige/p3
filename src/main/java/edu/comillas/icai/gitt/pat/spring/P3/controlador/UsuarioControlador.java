@@ -50,7 +50,7 @@ public class UsuarioControlador {
                     "El usuario con id " + idUsuario + " no existe")
                 );
         usuarioExistente.email = usuarioCambiado.email;
-        usuarioExistente.credenciales = usuarioCambiado.credenciales;
+        usuarioExistente.contraseña = usuarioCambiado.contraseña;
 
         this.repoUsuario.save(usuarioExistente);
         return usuarioExistente;

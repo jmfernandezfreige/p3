@@ -79,7 +79,7 @@ public class ConfiguracionSeguridad {
                     .roles(u.rol.nombreRol.name())
                     .build();
 
-        }
+        };
     }
 
 
