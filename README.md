@@ -55,19 +55,45 @@ Se ha implementado un controlador global de excepciones (`ControladorGlobalError
 
 Para facilitar las pruebas, el proyecto está configurado para ejecutar un script `data.sql` al arrancar. Este script puebla la base de datos recién creada con los roles básicos del sistema (`USER` y `ADMIN`), evitando la necesidad de crearlos manualmente antes de registrar el primer usuario.
 
-## Resumen de Endpoints Principales
+## Endpoints Implementados
 
-*A continuación se muestra un subconjunto representativo de los endpoints implementados.*
+## Tabla Completa de Endpoints de la API
 
-| Método | Ruta | Autorización | Descripción |
-| :--- | :--- | :--- | :--- |
-| `POST` | `/api/auth/register` | Pública | Registra un nuevo usuario en el sistema. |
-| `GET` | `/api/usuarios/me` | Autenticado | Devuelve los datos del perfil del usuario logueado. |
-| `GET` | `/api/usuarios` | ADMIN | Devuelve la lista completa de usuarios del sistema. |
-| `POST` | `/api/carritos` | Autenticado | Crea un carrito vacío asociado al usuario logueado. |
-| `POST` | `/api/carritos/{idCarrito}/lineas` | Autenticado (Propietario) | Añade un artículo al carrito (o suma unidades si ya existe). |
-| `DELETE` | `/api/carritos/{idCarrito}/lineas/{idLinea}`| Autenticado (Propietario) | Elimina un artículo del carrito y recalcula el total. |
+La API cuenta con los siguientes endpoints, protegidos mediante Spring Security y validados con `jakarta.validation`:
 
+### Gestión de Usuarios
+
+| Método | Ruta | Autorización | Cuerpo (Body) | Descripción | Códigos de Respuesta |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| `POST` | `/api/auth/register` | Pública | JSON Usuario | Registra un nuevo usuario en el sistema. Crea el rol si no existe. | `201`, `400`, `409` |
+| `GET` | `/api/usuarios/me` | Autenticado | N/A | Obtiene los datos del perfil del usuario logueado. | `200`, `401`, `404` |
+| `PUT` | `/api/usuarios/me` | Autenticado | JSON Usuario | Modifica el email y/o contraseña del usuario logueado. | `200`, `400`, `401`, `404` |
+| `DELETE` | `/api/usuarios/me` | Autenticado | N/A | Elimina por completo la cuenta del usuario logueado. | `204`, `401`, `404` |
+| `GET` | `/api/usuarios` | ADMIN | N/A | Obtiene la lista completa de todos los usuarios registrados. | `200`, `401`, `403` |
+
+### Gestión de Carritos
+
+| Método | Ruta | Autorización | Cuerpo (Body) | Descripción | Códigos de Respuesta |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| `POST` | `/api/carritos` | Autenticado | JSON Carrito | Crea un nuevo carrito vacío asociado automáticamente al usuario logueado. | `201`, `400`, `401` |
+| `GET` | `/api/carritos/{idCarrito}` | Propietario | N/A | Devuelve la información de un carrito específico si pertenece al usuario. | `200`, `401`, `403`, `404` |
+| `PUT` | `/api/carritos/{idCarrito}` | Propietario | JSON Carrito | Actualiza la información a nivel de cabecera del carrito. | `200`, `400`, `401`, `403`, `404` |
+| `DELETE` | `/api/carritos/{idCarrito}` | Propietario | N/A | Elimina un carrito y, en cascada, todas sus líneas asociadas. | `204`, `401`, `403`, `404` |
+| `GET` | `/api/carritos` | ADMIN | N/A | Devuelve la lista de todos los carritos de la base de datos (para auditoría). | `200`, `401`, `403` |
+
+### Gestión de Líneas de Carrito (Artículos)
+
+| Método | Ruta | Autorización | Cuerpo (Body) | Descripción | Códigos de Respuesta |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| `POST` | `/api/carritos/{id}/lineas` | Propietario | JSON LineadeCarrito | Añade un artículo al carrito. Si ya existe, suma las unidades y actualiza el coste total del carrito. | `201`, `400`, `401`, `403`, `404` |
+| `DELETE` | `/api/carritos/{id}/lineas/{idLinea}`| Propietario | N/A | Borra una línea específica y resta su coste del total del carrito padre. | `204`, `401`, `403`, `404` |
+
+> **Nota sobre Códigos de Error Frecuentes:**
+> * `400 Bad Request`: JSON mal formado o datos que no superan las validaciones `@Valid` (ej: precio negativo).
+> * `401 Unauthorized`: El usuario no ha enviado credenciales válidas en la petición.
+> * `403 Forbidden`: El usuario logueado intenta acceder o modificar un carrito que pertenece a otro usuario, o no tiene permisos de `ADMIN`.
+> * `404 Not Found`: El recurso solicitado (usuario, carrito o línea) no existe en la base de datos.
+> * `409 Conflict`: Intento de registrar un usuario con un email que ya existe en la base de datos.
 ## Pruebas Realizadas
 
 Se han realizado pruebas funcionales exhaustivas utilizando **Postman** (configurado con *Basic Auth*), verificando tanto los "caminos felices" (creación de usuarios, gestión de carritos completos) como los casos de error (intentos de acceso no autorizado, validaciones de formato, correos duplicados).
