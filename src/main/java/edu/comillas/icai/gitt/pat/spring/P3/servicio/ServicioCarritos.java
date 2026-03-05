@@ -8,7 +8,6 @@ import edu.comillas.icai.gitt.pat.spring.P3.repositorio.RepoUsuario;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -22,37 +21,27 @@ public class ServicioCarritos {
     RepoLineadeCarrito repoLineadeCarrito;
 
 
-//    private String getEmailUsuarioAutenticado() {
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//
-//        if (authentication == null || !authentication.isAuthenticated()) {
-//            throw new ResponseStatusException(
-//                    HttpStatus.UNAUTHORIZED,
-//                    "No autenticado");
-//        }
-//
-//        return authentication.getName();
-//    }
+    private Usuario getUsuarioLogueado(Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,"Usuario no autenticado");
+        }
 
-    private Usuario getUsuarioLogueado(String emailUsuario) {
-        Usuario usuario = repoUsuario.findByEmail(emailUsuario);
+        Usuario usuario = repoUsuario.findByEmail(authentication.getName());
         if (usuario == null) {
-            throw new ResponseStatusException(
-                    HttpStatus.UNAUTHORIZED,
-                    "Usuario no encontrado");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado en BD");
         }
         return usuario;
     }
 
-    public Carrito creaCarrito(Carrito carritoNuevo, String emailUsuario) {
-        Usuario usuario = getUsuarioLogueado(emailUsuario);
+    public Carrito creaCarrito(Carrito carritoNuevo, Authentication authentication) {
+        Usuario usuario = getUsuarioLogueado(authentication);
 
-        carritoNuevo.idUsuario = usuario.id;
+        carritoNuevo.usuario.id = usuario.id;
         return repoCarrito.save(carritoNuevo);
     }
 
-    public Carrito getCarrito(Long Id, Usuario usuario) {
-        Usuario usuario = getUsuarioLogueado(emailUsuario);
+    public Carrito getCarrito(Long idCarrito, Authentication authentication) {
+        Usuario usuario = getUsuarioLogueado(authentication);
 
         Carrito carrito = repoCarrito.findById(idCarrito)
                 .orElseThrow(() -> new ResponseStatusException(
@@ -69,16 +58,16 @@ public class ServicioCarritos {
         return carrito;
     }
 
-    public Carrito cambiaCarrito(Long idCarrito, Carrito carritoCambiado, String emailUsuario) {
-        Carrito carritoExistente = getCarrito(idCarrito, emailUsuario);
+    public Carrito cambiaCarrito(Long idCarrito, Carrito carritoCambiado, Authentication authentication) {
+        Carrito carritoExistente = getCarrito(idCarrito, authentication);
 
-        carritoExistente = carritoCambiado
+        carritoExistente.precioTotal = carritoCambiado.precioTotal;
 
         return repoCarrito.save(carritoExistente);
     }
 
-    public void borraCarrito(Long idCarrito, String emailUsuario) {
-        Carrito carritoExistente = getCarrito(idCarrito, emailUsuario);
-        repoCarrito.delete(carrito);
+    public void borraCarrito(Long idCarrito, Authentication authentication) {
+        Carrito carritoExistente = getCarrito(idCarrito, authentication);
+        repoCarrito.delete(carritoExistente);
     }
 }
