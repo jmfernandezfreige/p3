@@ -25,7 +25,7 @@ public class LineadeCarrito {
     @PositiveOrZero(message = "El precio unitario no puede ser negativo")
     public double precioUnitario;
 
-    @Column(nullable = false)
+    @Column
     @PositiveOrZero(message = "El coste de la línea no puede ser negativo")
     public double costeLinea;
 

@@ -1,9 +1,9 @@
 package edu.comillas.icai.gitt.pat.spring.P3.controlador;
 
 import edu.comillas.icai.gitt.pat.spring.P3.entidad.Carrito;
+import edu.comillas.icai.gitt.pat.spring.P3.entidad.LineadeCarrito;
 import edu.comillas.icai.gitt.pat.spring.P3.repositorio.RepoCarrito;
 import edu.comillas.icai.gitt.pat.spring.P3.repositorio.RepoLineadeCarrito;
-import edu.comillas.icai.gitt.pat.spring.P3.repositorio.RepoUsuario;
 import edu.comillas.icai.gitt.pat.spring.P3.servicio.ServicioCarritos;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,5 +48,28 @@ public class CarritoControlador {
     @PutMapping("/api/carritos/{idCarrito}")
     public Carrito cambiaCarrito(@PathVariable Long idCarrito, @Valid @RequestBody Carrito carritoCambiado, Authentication authentication) {
         return servicioCarritos.cambiaCarrito(idCarrito, carritoCambiado, authentication);
+    }
+
+    //LÍNEAS DE CARRITOS
+    @PostMapping("api/carritos/{idCarrito}/lineas")
+    @ResponseStatus(HttpStatus.CREATED)
+    public LineadeCarrito anadirLinea(@PathVariable Long idCarrito,
+                                      @Valid @RequestBody LineadeCarrito nuevaLinea,
+                                      Authentication authentication) {
+        return servicioCarritos.anadirLinea(idCarrito, nuevaLinea, authentication);
+    }
+
+    @GetMapping("api/carritos/{idCarrito}/lineas")
+    public Iterable<LineadeCarrito> getLineas(@PathVariable Long idCarrito,
+                                    Authentication authentication) {
+        return servicioCarritos.getLineas(idCarrito, authentication);
+    }
+
+    @DeleteMapping("/{idCarrito}/lineas/{idLinea}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void borraLinea(@PathVariable Long idCarrito,
+                           @PathVariable Long idLinea,
+                           Authentication authentication) {
+        servicioCarritos.borrarLinea(idCarrito, idLinea, authentication);
     }
 }
